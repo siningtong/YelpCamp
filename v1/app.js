@@ -8,7 +8,7 @@ mongoose.set('useUnifiedTopology', true);
 mongoose.connect('mongodb://localhost:27017/yelp_camp', {useNewUrlParser: true})
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
-
+const Comment = require("./models/comments")
 const Campground = require("./models/campground")
 const seedDB = require("./seeds")
 
@@ -24,7 +24,7 @@ app.get('/campgrounds', (req, res) => {
 		if(err){
 			console.log(err)
 		}	else{
-			  res.render('index', { campgrounds })
+			  res.render('campgrounds/index', { campgrounds })
 		}
 		
 	})
@@ -41,7 +41,7 @@ app.post('/campgrounds', (req, res) => {
 })
 //New route,show form to submit new campground
 app.get('/campgrounds/new', (req, res) => {
-  res.render('new')
+  res.render('campgrounds/new')
 })
 //Show route,show more info of campground
 app.get("/campgrounds/:id", function(req, res){
@@ -52,14 +52,44 @@ app.get("/campgrounds/:id", function(req, res){
         } else {
             console.log(foundCampground)
             //render show template with that campground
-            res.render("show", {foundCampground});
+            res.render("campgrounds/show", {foundCampground});
         }
     });
 })
 
-
-
-
+//====================
+// comments route
+//====================
+app.get("/campgrounds/:id/comments/new",(req,res)=>{
+	Campground.findById(req.params.id)
+		.then((campground)=>{
+		// console.log(campground)
+			res.render("comments/new",{campground})
+	})
+	.catch((err)=>{
+		console.log(err)
+	})
+})
+app.post("/campgrounds/:id/comments",(req,res)=>{
+	const comment = req.body.comment
+	Comment.create(comment)
+		.then((comment)=>{
+		console.log(comment)
+		Campground.findById(req.params.id)
+			.then((campground)=>{
+			console.log(campground)
+			campground.comments.push(comment)
+			campground.save()
+				.then(()=>{
+					res.redirect(`\/campgrounds\/${campground._id}`)
+				})	
+			})
+		})
+			.catch((err)=>{
+				console.log(err)
+				res.redirect("/campgrounds")
+			})
+})
 
 
 app.listen(PORT, () => {
