@@ -9,19 +9,10 @@ mongoose.connect('mongodb://localhost:27017/yelp_camp', {useNewUrlParser: true})
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const campgroundaSchema=new mongoose.Schema({
-	name:String,
-	image:String,
-	description:String
-})
-const Campground = mongoose.model('Campground',campgroundaSchema)
+const Campground = require("./models/campground")
+const seedDB = require("./seeds")
 
-// Campground.create({
-// 	name:'Nanaimo',
-// 	image: 'https://www.shopskibluemt.com/content/images/thumbs/0000569_yeti-mountain-campsite_625.jpeg',
-// 	description:'it is beautiful'
-// })
-
+seedDB()
 
 app.get('/', (req, res) => {
   res.render('landing')
@@ -53,17 +44,24 @@ app.get('/campgrounds/new', (req, res) => {
   res.render('new')
 })
 //Show route,show more info of campground
-app.get('/campgrounds/:id', (req,res)=>{
-	console.log(req.params.id)
-	const campgroundId = req.params.id
-	Campground.findById(campgroundId,(err,foundCampground)=>{
-	err?console.log(err):res.render('show',{foundCampground} )
-})	
+app.get("/campgrounds/:id", function(req, res){
+    //find the campground with provided ID
+    Campground.findById(req.params.id).populate("comments").exec(function(err, foundCampground){
+        if(err){
+            console.log(err);
+        } else {
+            console.log(foundCampground)
+            //render show template with that campground
+            res.render("show", {foundCampground});
+        }
+    });
 })
 
 
 
 
+
+
 app.listen(PORT, () => {
-  // console.log('server started!')
+  console.log('server started!')
 })

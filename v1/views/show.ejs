@@ -8,4 +8,13 @@
 <p>
 	<%= foundCampground.description%>
 </p>
+<% foundCampground.comments.forEach((comment)=>{%>
+	<p>
+		<strong><%= comment.auther%></strong>-<%= comment.text%>
+	</p>
+<%})%>
+
+
+
+
 <%- include("./partials/footer") %>
