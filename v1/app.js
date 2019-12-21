@@ -2,6 +2,9 @@ const express = require('express');
 const bodyParser = require("body-parser");
 const app = express()
 const mongoose = require('mongoose')
+const passport = require("passport");
+const User = require("./models/user")
+const LocalStrategy = require("passport-local")
 const PORT = 3000
 mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
@@ -12,6 +15,26 @@ app.use(express.static(__dirname + "/public"))
 const Comment = require("./models/comments")
 const Campground = require("./models/campground")
 const seedDB = require("./seeds")
+//passport configuration
+app.use(require("express-session")({
+	secret:"Calvin is the most handsome guy in Nanaimo",
+	resave:false,
+	saveUninitialized:false
+}));
+app.use(passport.initialize());
+app.use(passport.session())
+passport.use(new LocalStrategy(User.authenticate()))
+passport.serializeUser(function(User, done) {
+  done(null, User);
+});
+passport.deserializeUser(function(User, done) {
+  done(null, User);
+});
+//自己写的middleware，每个route都会执行，并且把req.user传递给每个template
+app.use((req,res,next)=>{
+	res.locals.currentUser = req.user;
+	next()
+})
 
 seedDB()
 
@@ -20,12 +43,14 @@ app.get('/', (req, res) => {
 })
 //index route,show all the campgrounds
 app.get('/campgrounds', (req, res) => {
+	const currentUser = req.user
+	console.log(currentUser)
 	//get all campgrounds from db
 	Campground.find({},(err,campgrounds)=>{
 		if(err){
 			console.log(err)
 		}	else{
-			  res.render('campgrounds/index', { campgrounds })
+			  res.render('campgrounds/index', { campgrounds,currentUser })
 		}
 		
 	})
@@ -51,7 +76,6 @@ app.get("/campgrounds/:id", function(req, res){
         if(err){
             console.log(err);
         } else {
-            console.log(foundCampground)
             //render show template with that campground
             res.render("campgrounds/show", {foundCampground});
         }
@@ -61,28 +85,26 @@ app.get("/campgrounds/:id", function(req, res){
 //====================
 // comments route
 //====================
-app.get("/campgrounds/:id/comments/new",(req,res)=>{
+app.get("/campgrounds/:id/comments/new",isLoggedIn,(req,res)=>{
 	Campground.findById(req.params.id)
 		.then((campground)=>{
-		// console.log(campground)
 			res.render("comments/new",{campground})
 	})
 	.catch((err)=>{
 		console.log(err)
 	})
 })
-app.post("/campgrounds/:id/comments",(req,res)=>{
+app.post("/campgrounds/:id/comments",isLoggedIn,(req,res)=>{
 	const comment = req.body.comment
 	Comment.create(comment)
 		.then((comment)=>{
-		console.log(comment)
+		// console.log(comment)
 		Campground.findById(req.params.id)
 			.then((campground)=>{
-			console.log(campground)
+			// console.log(campground)
 			campground.comments.push(comment)
 			campground.save()
-				.then(()=>{
-					res.redirect(`\/campgrounds\/${campground._id}`)
+				.then(()=>{			res.redirect(`\/campgrounds\/${campground._id}`)
 				})	
 			})
 		})
@@ -91,6 +113,46 @@ app.post("/campgrounds/:id/comments",(req,res)=>{
 				res.redirect("/campgrounds")
 			})
 })
+//=====================
+//Auth routes
+//=====================
+app.get("/register",(req,res)=>{
+	res.render("register")
+});
+//handling user sign up
+app.post("/register",(req,res)=>{
+	const newUser = new User({username:req.body.username})
+	User.register(newUser, req.body.password, (err,user)=>{
+		if(err){
+			console.log(err)
+			return res.redirect("/register")
+		}
+		passport.authenticate("local")(req,res,()=>{
+			res.redirect("/campgrounds")
+		})
+	})
+})
+//login routes
+app.get("/login",(req,res)=>{
+	res.render("login")
+});
+app.post("/login", passport.authenticate("local",{
+	successRedirect:"/campgrounds",
+	failureRedirect:"/login"
+}),(req,res)=>{})
+//logout route
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/campgrounds');
+});
+
+//middleware
+function isLoggedIn(req,res,next){
+	if(req.isAuthenticated()){
+		return next()
+	}
+	res.redirect("/login")
+}
 
 
 app.listen(PORT, () => {

@@ -1,0 +1,26 @@
+<%- include("./partials/header") %>
+<div class="container">
+  <!-- entire form goes into one row -->
+  <div class="row">
+    <h1 style="text-align: center;">Registration</h1>
+    <div style='width:30%; margin:25px auto'>
+      <form action="/register" method="POST">
+        <div class="form-group">
+          <input class="form-control" placeholder="username" type="text" name="username">
+        </div>
+        <div class="form-group">
+          <input class="form-control" placeholder="password" type="password" name="password">
+        </div>
+        <div class="form-group">
+          <!--btn-block make the button take the full width of a parent -->
+          <button class="btn btn-lg btn-primary btn-block">Submit</button>
+        </div>
+      </form>
+      <a href="/campgrounds">Go Back</a>
+    </div>
+
+  </div>
+
+</div>
+
+<%- include("./partials/footer") %>
