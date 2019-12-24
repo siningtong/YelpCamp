@@ -19,17 +19,21 @@ router.get('/', (req, res) => {
 	})
 })
 //create route,add new campground
-router.post('/', (req, res) => {
-  const name = req.body.name
-  const image = req.body.image
-  const description = req.body.description
-  const newCampground = { name, image, description }
+router.post('/',isLoggedIn, (req, res) => {
+  const name = req.body.name;
+  const image = req.body.image;
+  const description = req.body.description;
+  const auther = {
+	  id:req.user._id,
+	  username:req.user.username
+  }
+  const newCampground = { name, image, description, auther}
   Campground.create(newCampground,(err,newlyCreatedCampground)=>{
 	  err?console.log(err):res.redirect('/campgrounds')
   })
 })
 //New route,show form to submit new campground
-router.get('/new', (req, res) => {
+router.get('/new',isLoggedIn, (req, res) => {
   res.render('campgrounds/new')
 })
 //Show route,show more info of campground
