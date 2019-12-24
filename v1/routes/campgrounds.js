@@ -7,7 +7,7 @@ const Campground = require("../models/campground")
 //index route,show all the campgrounds
 router.get('/', (req, res) => {
 	const currentUser = req.user
-	console.log(currentUser)
+	// console.log(currentUser)
 	//get all campgrounds from db
 	Campground.find({},(err,campgrounds)=>{
 		if(err){

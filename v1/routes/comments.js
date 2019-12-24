@@ -24,10 +24,13 @@ router.post("/",isLoggedIn,(req,res)=>{
 		// console.log(comment)
 		Campground.findById(req.params.id)
 			.then((campground)=>{
-			// console.log(campground)
-			campground.comments.push(comment)
+			//add username and id to comment到这一步的时候user肯定已经login，所以可以用req.user 
+			comment.auther.id = req.user._id;
+			comment.auther.username = req.user.username;
+			comment.save();
+			campground.comments.push(comment);
 			campground.save()
-				.then(()=>{			res.redirect(`\/campgrounds\/${campground._id}`)
+				.then(()=>{res.redirect(`\/campgrounds\/${campground._id}`)
 				})	
 			})
 		})

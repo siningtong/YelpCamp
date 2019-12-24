@@ -21,30 +21,30 @@ const data = [
 ]
 
 function seedDB(){
-
-	Campground.deleteMany({})
-	.then(()=>{
-		Comment.deleteMany({})
-})
-	.then(()=>{
-		data.forEach((seed)=>{
-			Campground.create(seed)
-				.then((campground)=>{
-					Comment.create({
-						text:'吃什么',
-						auther:"Linda"
-					})
-						.then((comment)=>{
-							campground.comments.push(comment)
-							campground.save()
-							// console.log(campground)
-					})
-				})
-		})
-	})
-	.catch((err)=>{
-		console.log(err)
-	})
+	Campground.remove({},function(err){})
+// 	Campground.deleteMany({})
+// 	.then(()=>{
+// 		Comment.deleteMany({})
+// })
+// 	.then(()=>{
+// 		data.forEach((seed)=>{
+// 			Campground.create(seed)
+// 				.then((campground)=>{
+// 					Comment.create({
+// 						text:'吃什么',
+// 						auther:"Linda"
+// 					})
+// 						.then((comment)=>{
+// 							campground.comments.push(comment)
+// 							campground.save()
+// 							// console.log(campground)
+// 					})
+// 				})
+// 		})
+// 	})
+// 	.catch((err)=>{
+// 		console.log(err)
+// 	})
 }
 
 module.exports = seedDB;
