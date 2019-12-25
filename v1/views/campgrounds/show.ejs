@@ -21,10 +21,12 @@
 					<p>
 						<em>Submitted By </em><%= foundCampground.auther.username%>
 					</p>
-					<a class="btn btn-warning" href="/campgrounds/<%=foundCampground._id%>/edit">Edit</a>
-					<form id = "delete-form" action="/campgrounds/<%=foundCampground._id%>?_method=DELETE" method="POST">
-						<Button class="btn btn-danger">Delete</Button>
-					</form>
+					<%if(currentUser && foundCampground.auther.id.equals(currentUser._id)){%>
+						<a class="btn btn-warning" href="/campgrounds/<%=foundCampground._id%>/edit">Edit</a>
+						<form id = "delete-form" action="/campgrounds/<%=foundCampground._id%>?_method=DELETE" method="POST">
+							<Button class="btn btn-danger">Delete</Button>
+						</form>
+					<%}%>
 				</div>
 			</div>
 			<div class="well">
