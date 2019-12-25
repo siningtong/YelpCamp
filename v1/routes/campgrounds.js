@@ -73,6 +73,16 @@ router.put("/:id",(req,res)=>{
 		})
 })
 //delete route
+router.delete("/:id",(req,res)=>{
+	Campground.findByIdAndRemove(req.params.id)
+		.then((deletedCampground)=>{
+			console.log(deletedCampground)
+			res.redirect("/campgrounds")
+		})
+		.catch((err)=>{
+		console.log(err)
+		})
+})
 //middleware
 function isLoggedIn(req,res,next){
 	if(req.isAuthenticated()){
