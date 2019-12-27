@@ -39,6 +39,30 @@ router.post("/",isLoggedIn,(req,res)=>{
 				res.redirect("/campgrounds")
 			})
 })
+//edit comment
+router.get("/:comment_id/edit",(req,res)=>{
+	const campgroundId = req.params.id
+	Comment.findById(req.params.comment_id)
+		.then((foundComment)=>{
+			res.render("comments/edit",{foundComment,campgroundId})
+		})
+		.catch((err)=>{
+			res.redirect("back")
+})	
+})
+//update route
+router.put("/:comment_id",(req,res)=>{
+	Comment.findByIdAndUpdate(req.params.comment_id,req.body.comment)
+		.then((foundComment)=>{
+		console.log(req.body.comment)
+			res.redirect(`\/campgrounds\/${req.params.id}`)
+		})
+		.catch((err)=>{
+			console.log(err)
+			res.redirect("back")
+	})
+})
+
 //middleware
 function isLoggedIn(req,res,next){
 	if(req.isAuthenticated()){

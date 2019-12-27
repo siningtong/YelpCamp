@@ -17,6 +17,7 @@ const app = express()
 const PORT = 3000
 mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
+mongoose.set('useFindAndModify', false);
 mongoose.connect('mongodb://localhost:27017/yelp_camp', {useNewUrlParser: true})
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
