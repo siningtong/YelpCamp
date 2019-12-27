@@ -40,7 +40,7 @@ router.post("/",isLoggedIn,(req,res)=>{
 			})
 })
 //edit comment
-router.get("/:comment_id/edit",(req,res)=>{
+router.get("/:comment_id/edit",checkCommentOwnership,(req,res)=>{
 	const campgroundId = req.params.id
 	Comment.findById(req.params.comment_id)
 		.then((foundComment)=>{
@@ -51,7 +51,7 @@ router.get("/:comment_id/edit",(req,res)=>{
 })	
 })
 //update route
-router.put("/:comment_id",(req,res)=>{
+router.put("/:comment_id",checkCommentOwnership,(req,res)=>{
 	Comment.findByIdAndUpdate(req.params.comment_id,req.body.comment)
 		.then((foundComment)=>{
 		console.log(req.body.comment)
@@ -62,6 +62,17 @@ router.put("/:comment_id",(req,res)=>{
 			res.redirect("back")
 	})
 })
+//delete route
+router.delete("/:comment_id",checkCommentOwnership,(req,res)=>{
+	Comment.findByIdAndRemove(req.params.comment_id)
+		.then((detetedComment)=>{
+			console.log(detetedComment)
+			res.redirect(`\/campgrounds\/${req.params.id}`)
+		})
+		.catch((err)=>{
+			res.redirect("back")
+	})
+})
 
 //middleware
 function isLoggedIn(req,res,next){
@@ -69,5 +80,22 @@ function isLoggedIn(req,res,next){
 		return next()
 	}
 	res.redirect("/login")
+}
+function checkCommentOwnership(req,res,next){
+	if(req.isAuthenticated()){
+		Comment.findById(req.params.comment_id)
+			.then((foundComment)=>{
+				if(foundComment.auther.id.equals(req.user._id)){
+					next()
+				} else{
+					res.redirect("back")
+				}
+			})
+			.catch(()=>{
+				res.redirect("back")
+			})
+	} else{
+		res.redirect("back")
+	}
 }
 module.exports = router;
