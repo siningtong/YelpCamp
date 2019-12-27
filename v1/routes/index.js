@@ -21,15 +21,17 @@ router.get("/register",(req,res)=>{
 //handling user sign up
 router.post("/register",(req,res)=>{
 	const newUser = new User({username:req.body.username})
-	User.register(newUser, req.body.password, (err,user)=>{
-		if(err){
-			console.log(err)
-			return res.redirect("/register")
-		}
-		passport.authenticate("local")(req,res,()=>{
+	User.register(newUser, req.body.password)
+		.then((user)=>{
+			req.flash("success",`Welcome to YelpCamp ${user.username}`)
+			passport.authenticate("local")(req,res,()=>{
 			res.redirect("/campgrounds")
 		})
-	})
+		})
+		.catch((err)=>{
+			req.flash("error",err.message)
+			return res.redirect("/register")
+		})
 })
 //login routes
 router.get("/login",(req,res)=>{
@@ -40,16 +42,10 @@ router.post("/login", passport.authenticate("local",{
 	failureRedirect:"/login"
 }),(req,res)=>{})
 //logout route
-router .get('/logout', function(req, res){
-  req.logout();
-  res.redirect('/campgrounds');
+router.get('/logout', (req, res)=>{
+	req.logout();
+	req.flash("success","Logged you out")
+	res.redirect('/campgrounds');
 });
 
-//middleware
-function isLoggedIn(req,res,next){
-	if(req.isAuthenticated()){
-		return next()
-	}
-	res.redirect("/login")
-}
 module.exports = router;
