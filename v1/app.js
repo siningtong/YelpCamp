@@ -16,7 +16,7 @@ const indexRoutes = require("./routes/index");
 const commentsRoutes = require("./routes/comments");
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT||3000;
 mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
 mongoose.set('useFindAndModify', false);
