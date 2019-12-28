@@ -20,7 +20,15 @@ const PORT = process.env.PORT||3000;
 mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
 mongoose.set('useFindAndModify', false);
-mongoose.connect('mongodb://localhost:27017/yelp_camp', {useNewUrlParser: true})
+// mongoose.connect('mongodb://localhost:27017/yelp_camp', {useNewUrlParser: true})
+mongoose.connect("mongodb+srv://siningtong:tongsining@cluster0-rjoqh.mongodb.net/test?retryWrites=true&w=majority",{
+	useNewUrlParser: true,
+	useCreateIndex:true
+}).then(()=>{
+	console.log("connected to DB!")
+}).catch((err)=>{
+	console.log("error:",err.message)
+})
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/public"));
