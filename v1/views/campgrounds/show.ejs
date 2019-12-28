@@ -10,31 +10,33 @@
 				<li class="list-group-item">Info 1</li>
 				<li class="list-group-item">Info 1</li>
 			</div>
+			<div id="map"></div>
 		</div>
 		<div class="col-md-9">
 			<div class="thumbnail">
 				<img class="img-responsive" src='<%= foundCampground.image %>'>
 				<div class="caption">
-					<h4 class="pull-right">$9/night</h4>
+					<h4 class="pull-right">$<%= foundCampground.price %>/night</h4>
+					<%console.log(foundCampground)%>
 					<h4><a><%= foundCampground.name %></a></h4>
 					<p><%= foundCampground.description%></p>
 					<p>
 						<em>Submitted By </em><%= foundCampground.auther.username%>
 					</p>
-					<%if(currentUser && foundCampground.auther.id.equals(currentUser._id)){%>
-						<a class="btn btn-warning" href="/campgrounds/<%=foundCampground._id%>/edit">Edit</a>
-						<form class = "delete-form" action="/campgrounds/<%=foundCampground._id%>?_method=DELETE" method="POST">
+					<% if(currentUser && foundCampground.auther.id.equals(currentUser._id)){ %>
+						<a class="btn btn-warning" href="/campgrounds/<%= foundCampground._id %>/edit">Edit</a>
+						<form class = "delete-form" action="/campgrounds/<%= foundCampground._id %>?_method=DELETE" method="POST">
 							<Button class="btn btn-danger">Delete</Button>
 						</form>
-					<%}%>
+					<% } %>
 				</div>
 			</div>
 			<div class="well">
 				<div class="text-right">
-					<a class="btn btn-success" href="/campgrounds/<%= foundCampground._id%>/comments/new">Add A New Comment</a>
+					<a class="btn btn-success" href="/campgrounds/<%= foundCampground._id %>/comments/new">Add A New Comment</a>
 				</div>
 				<hr>
-				<% foundCampground.comments.forEach((comment)=>{%>
+				<% foundCampground.comments.forEach((comment)=>{ %>
 				<div class="row">
 					<div class="col-md-12">
 						<p><strong><%= comment.auther.username%></strong></p>
@@ -57,7 +59,34 @@
 
 
 
-
+<script>
+  function initMap() {
+    var lat = <%= foundCampground.lat %>;
+    var lng = <%= foundCampground.lng %>;
+    var center = {lat: lat, lng: lng };
+    var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 8,
+        center: center,
+        scrollwheel: false
+    });
+    var contentString = `
+      <strong><%= foundCampground.name %><br />
+      <%= foundCampground.location %></strong>
+      <p><%= foundCampground.description %></p>
+    `
+    var infowindow = new google.maps.InfoWindow({
+      content: contentString
+    });
+    var marker = new google.maps.Marker({
+        position: center,
+        map: map
+    });
+    marker.addListener('click', function() {
+      infowindow.open(map, marker);
+    });
+  }
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC1R22vFFuKRwyR16JGqJPiutR2_mAB4e8&callback=initMap"></script>
 
 
 

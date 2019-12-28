@@ -2,8 +2,12 @@ const mongoose = require("mongoose");
 
 const campgroundaSchema=new mongoose.Schema({
 	name:String,
+	price:String,
 	image:String,
 	description:String,
+	location:String,
+	lat:Number,
+	lng:Number,
 	auther:{
 		id:{
 			type: mongoose.Schema.Types.ObjectId,
