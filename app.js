@@ -14,14 +14,14 @@ const seedDB = require("./seeds");
 const campgroundsRoutes = require("./routes/campgrounds");
 const indexRoutes = require("./routes/index");
 const commentsRoutes = require("./routes/comments");
-
 const app = express();
 const PORT = process.env.PORT||3000;
 mongoose.set('useCreateIndex', true);
-mongoose.set('useUnifiedTopology', true);
+mongoose.set('use UnifiedTopology', true);
 mongoose.set('useFindAndModify', false);
 // mongoose.connect('mongodb://localhost:27017/yelp_camp', {useNewUrlParser: true})
-mongoose.connect("mongodb+srv://siningtong:tongsining@cluster0-rjoqh.mongodb.net/test?retryWrites=true&w=majority",{
+console.log(process.env.DATABASEURL)
+// mongoose.connect("mongodb+srv://siningtong:tongsining@cluster0-rjoqh.mongodb.net/test?retryWrites=true&w=majority",{
 	useNewUrlParser: true,
 	useCreateIndex:true
 }).then(()=>{
