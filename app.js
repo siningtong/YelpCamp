@@ -24,12 +24,14 @@ const databaseURL = process.env.DATABASEURL || 'mongodb://localhost:27017/yelp_c
 // console.log(process.env.DATABASEURL)
 mongoose.connect(process.env.DATABASEURL,{
 	useNewUrlParser: true,
-	useCreateIndex:true
+	useCreateIndex:true,
+	useUnifiedTopology: true
 }).then(()=>{
 	console.log("connected to DB!")
 }).catch((err)=>{
 	console.log("error:",err.message)
-})
+});
+app.locals.moment = require('moment');
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/public"));

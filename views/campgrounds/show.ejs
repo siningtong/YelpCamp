@@ -17,11 +17,11 @@
 				<img class="img-responsive" src='<%= foundCampground.image %>'>
 				<div class="caption">
 					<h4 class="pull-right">$<%= foundCampground.price %>/night</h4>
-					<%console.log(foundCampground)%>
+					<!-- <%console.log(foundCampground)%> -->
 					<h4><a><%= foundCampground.name %></a></h4>
 					<p><%= foundCampground.description%></p>
 					<p>
-						<em>Submitted By </em><%= foundCampground.auther.username%>
+					  <em>Submitted by: <%= foundCampground.auther.username %>, <%= moment(foundCampground.createdAt).fromNow() %></em>
 					</p>
 					<% if(currentUser && foundCampground.auther.id.equals(currentUser._id)){ %>
 						<a class="btn btn-warning" href="/campgrounds/<%= foundCampground._id %>/edit">Edit</a>
@@ -40,8 +40,7 @@
 				<div class="row">
 					<div class="col-md-12">
 						<p><strong><%= comment.auther.username%></strong></p>
-						<span class="pull-right">10 days ago</span>
-						<p><%= comment.text%> </p>
+						<span class="pull-right"><%= moment(comment.createdAt).fromNow() %></span>						<p><%= comment.text%> </p>
 						<%if(currentUser && comment.auther.id.equals(currentUser._id)){%>
 							<a class="btn btn-xs btn-warning" href="/campgrounds/<%=foundCampground._id%>/comments/<%=comment._id%>/edit">Edit</a>
 							<form class = "delete-form" action="/campgrounds/<%=foundCampground._id%>/comments/<%= comment._id%>?_method=DELETE" method="POST">
