@@ -16,17 +16,31 @@ const Comment = require("../models/comments")
 const Campground = require("../models/campground")
 //index route,show all the campgrounds
 router.get('/', (req, res) => {
-	const currentUser = req.user
-	// console.log(currentUser)
-	//get all campgrounds from db
-	Campground.find({},(err,campgrounds)=>{
-		if(err){
-			console.log(err)
-		}	else{
-			  res.render('campgrounds/index', { campgrounds,currentUser })
-		}
-		
+	const currentUser = req.user;
+	let noMatch = "";
+	if(req.query.search){
+		const regex = new RegExp(escapeRegex(req.query.search), 'gi');	
+		Campground.find({name: regex}, (err,campgrounds)=>{
+			if(err){
+				console.log(err)
+			} else{
+				if(campgrounds.length<1){
+					noMatch = "No campgrounds match that query,please try again."
+				}
+			  	res.render('campgrounds/index', { campgrounds,currentUser,noMatch })
+		}	
 	})
+	} else{
+		//get all campgrounds from db
+		Campground.find({},(err,campgrounds)=>{
+			if(err){
+				console.log(err)
+			} else{
+			  	res.render('campgrounds/index', { campgrounds,currentUser,noMatch })
+		}
+	})
+	}
+
 })
 //CREATE - add new campground to DB
 router.post("/", middleware.isLoggedIn, function(req, res){
@@ -119,5 +133,9 @@ router.delete("/:id", middleware.checkCampgroundOwnership, (req,res)=>{
 		console.log(err)
 		})
 })
+//from stack flow
+function escapeRegex(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+};
 
 module.exports = router;

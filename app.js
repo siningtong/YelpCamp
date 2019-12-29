@@ -22,7 +22,7 @@ mongoose.set('useFindAndModify', false);
 const databaseURL = process.env.DATABASEURL || 'mongodb://localhost:27017/yelp_camp' 
 // mongoose.connect('mongodb://localhost:27017/yelp_camp', {useNewUrlParser: true})
 // console.log(process.env.DATABASEURL)
-mongoose.connect(process.env.DATABASEURL,{
+mongoose.connect(databaseURL,{
 	useNewUrlParser: true,
 	useCreateIndex:true,
 	useUnifiedTopology: true
