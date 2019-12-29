@@ -21,7 +21,7 @@ mongoose.set('use UnifiedTopology', true);
 mongoose.set('useFindAndModify', false);
 // mongoose.connect('mongodb://localhost:27017/yelp_camp', {useNewUrlParser: true})
 console.log(process.env.DATABASEURL)
-// mongoose.connect("mongodb+srv://siningtong:tongsining@cluster0-rjoqh.mongodb.net/test?retryWrites=true&w=majority",{
+mongoose.connect(process.env.DATABASEURL,{
 	useNewUrlParser: true,
 	useCreateIndex:true
 }).then(()=>{
