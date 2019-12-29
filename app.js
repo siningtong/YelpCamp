@@ -19,8 +19,9 @@ const PORT = process.env.PORT||3000;
 mongoose.set('useCreateIndex', true);
 mongoose.set('use UnifiedTopology', true);
 mongoose.set('useFindAndModify', false);
+const databaseURL = process.env.DATABASEURL || 'mongodb://localhost:27017/yelp_camp' 
 // mongoose.connect('mongodb://localhost:27017/yelp_camp', {useNewUrlParser: true})
-console.log(process.env.DATABASEURL)
+// console.log(process.env.DATABASEURL)
 mongoose.connect(process.env.DATABASEURL,{
 	useNewUrlParser: true,
 	useCreateIndex:true
