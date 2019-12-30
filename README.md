@@ -3,7 +3,10 @@ YelpCamp is a full stack web application built with Node.js,Express,MongoDB,Boot
 ## Final Product
 ### Registration and login page
 !["Registration and login page"](https://github.com/siningtong/YelpCamp-Project/blob/master/docs/YelpCam-login.gif?raw=true)
-
+### Add new campgrounds and comments
+!["Add new campgrounds and comments"]
+### Can only delete owned campgrounds and comments
+### Fuzzy search
 ## Dependencies
 - body-parser: "^1.19.0",
 - connect-flash: "^0.1.1",
