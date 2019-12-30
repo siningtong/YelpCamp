@@ -1,6 +1,8 @@
 # YelpCamp-Project
 YelpCamp is a full stack web application built with Node.js,Express,MongoDB,Bootstrap, and GoogleMap API. The application is hosted on heroku(https://yelpcamp-of-siningtong.herokuapp.com/) with connenction to a cloud MongoDB Atlas database. Clients can create,delete, and edit campgrounds or comments after registered and logged in.
 ## Final Product
+### Registration and login page
+!["Registration and login page"](https://github.com/MaxWong03/MidtermProject-TODO-List/blob/master/docs/gifs/carousel-1.gif)
 
 ## Dependencies
 - body-parser: "^1.19.0",
